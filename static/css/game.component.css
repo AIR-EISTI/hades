@@ -1,0 +1,75 @@
+.input
+{
+  margin:10px;
+  width: 200px;
+  text-align: center;
+}
+
+input[type='text']
+{
+
+  display: inline-block;
+  margin-top: 5px;
+
+
+}
+
+input[type='submit'], input[type='button']
+{
+  background-color: white;
+  border:1px solid gray;
+  height: 20px;
+  margin-bottom: 10px;
+
+
+}
+
+input:hover
+{
+  border:1px solid lightgrey;
+  background-color: lightyellow;
+}
+
+fieldset
+{
+  border: none;
+  border-top:3px double lightcoral;
+  margin-left: 10px;
+  margin-right: 10px;
+
+}
+
+legend
+{
+    border: 1px solid lightcoral;
+    padding: 3px;
+    padding-right: 8px;
+    padding-left: 8px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.command
+{
+  background-color:#593a54;
+  color:white;
+  padding: 10px;
+}
+
+.echec
+{
+  background-color: brown;
+}
+.reussite
+{
+   background-color: lawngreen;
+}
+.echec,.reussite
+{
+
+    height: 30px;
+    text-align: center;
+    border: 2px solid lightgrey;
+    margin: 5px;
+    padding-top: 10px;
+}

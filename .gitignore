@@ -1,0 +1,5 @@
+node_modules/
+configs/
+static/js/app/**/*.js
+static/js/app/**/*.map
+*.log

@@ -1,0 +1,14 @@
+[Unit]
+Description=Hades service
+After=network.service
+
+[Service]
+Type=simple
+KillMode=mixed
+User=root
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/opt/hades
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

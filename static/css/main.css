@@ -1,0 +1,51 @@
+body, html{
+  margin: 0;
+  padding: 0;
+}
+body{
+  height: 100vh;
+}
+my-app{
+  height: 100%;
+  display: flex;
+}
+nav{
+  margin: 0;
+  width: 15rem;
+  height: 100%;
+  box-shadow: 0 0 5px #a4a4a4;
+}
+nav ul{
+  margin: 0;
+  padding-left:20px;
+}
+nav > ul{
+  padding-left:10px;
+  list-style: none;
+}
+my-servers li{
+  list-style:disc;
+}
+my-servers li a{
+  color: black;
+}
+.running{
+  color:#00e400;
+}
+.error{
+  color:red;
+}
+.warn{
+  color:#ff9900;
+}
+
+serveur-console
+{
+    width: 100%;
+}
+
+input[type='text']
+{
+  border:1px solid gray;
+  height: 20px;
+}
