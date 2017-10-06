@@ -11,6 +11,7 @@ export class Game {
 }
 
 export class ServeurLauncher {
+  nickname: string;
   game:string;
   vars:Object;
 }

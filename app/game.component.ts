@@ -66,6 +66,7 @@ export class GameComponent implements OnInit {
     serveur = new ServeurLauncher();
     serveur.game = this.name;
     serveur.vars = new Object()
+    serveur.nickname = this.game.name;
 
     for(let varr of this.game.vars)
     {

@@ -1,5 +1,5 @@
 <section *ngIf="serveur" (keydown)="keyDownFunction($event)">
-<h1>{{serveur.name}}</h1>
+<h1>{{serveur.name}} :: {{serveur.nickname}}</h1>
 <h2>Status du serveur</h2>
 {{serveur.status}} : {{serveur.exitCode}}
 <div class="on-off {{ serveur.status === 'RUNNING' ? 'on' : 'off' }}" id="arret" #button (click)="arret()">

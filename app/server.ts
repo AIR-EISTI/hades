@@ -6,6 +6,7 @@ export class Server{
 
 export class ServerInfo{
   name: string;
+  nickname: string;
   status: string;
   command: string;
   args: Array<string>;

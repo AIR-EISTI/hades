@@ -68,6 +68,7 @@ api.post('/servers', function createServer(req, res){
   let gameName = req.body.game || "";
   let variables = req.body.vars || {};
   let finalConfig = configManager.setVariables(gameName, variables);
+  finalConfig.nickname = req.body.nickname; 
   let returnValue = gameManager.startGame(finalConfig);
 
   res.json(returnValue);

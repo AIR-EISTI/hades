@@ -20,12 +20,13 @@ function startGame(config){
   let proc = pty.spawn(command, args, {
     uid: config.uid,
     gid: config.gid,
-    cwd: config.cwd 
+    cwd: config.cwd
   });
   proc.pid = proc.pid || uniqError.next().value;
 
   gamesProcess[proc.pid] = {
     name : config.name,
+    nickname: config.nickname,
     process : proc,
     status : 'RUNNING',
     command : command,
@@ -105,7 +106,7 @@ function getServersList(){
   for(pid in gamesProcess){
     serversList.push({
       pid : pid,
-      name: gamesProcess[pid].name,
+      name: gamesProcess[pid].nickname,
       status : gamesProcess[pid].status
     });
   }
