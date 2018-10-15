@@ -1,5 +1,4 @@
 const express = require('express');
-const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const socketIo =require('socket.io');
 const http = require('http');
@@ -11,25 +10,12 @@ var io = socketIo(server);
 var configManager;
 var gameManager;
 
-app.engine('.ejs', ejs.__express);
-app.set('views', __dirname+'/views');
-app.set('view engine', 'ejs');
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-
-// Defining static routes
-app.use('/static', express.static('static'));
-app.use('/static/js/node_modules', express.static('node_modules'));
-app.use('/templates', express.static('app/templates'));
 
 var api = express();
 
 app.use('/api', api);
-
-app.get('/', function(req,res){
-  return res.render('index', {config : configManager.getConfig()});
-});
 
 api.get('/games', function getGames (req, res){
   let configObj = configManager.getConfig();
@@ -68,7 +54,7 @@ api.post('/servers', function createServer(req, res){
   let gameName = req.body.game || "";
   let variables = req.body.vars || {};
   let finalConfig = configManager.setVariables(gameName, variables);
-  finalConfig.nickname = req.body.nickname; 
+  finalConfig.nickname = req.body.nickname;
   let returnValue = gameManager.startGame(finalConfig);
 
   res.json(returnValue);
