@@ -12,6 +12,7 @@ class ConfigManager {
     this.configDir =  __dirname + '/configs/'
     this.matchFileRegex = /\.json$/
     this.games = {}
+    this.readConfigDir()
   }
 
   readConfigDir () {
