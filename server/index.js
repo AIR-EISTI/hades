@@ -1,7 +1,21 @@
-const gameManager = require('./games.js');
-const webServer = require('./webServer.js');
-const IoServer = require('./socketServer');
+const express = require('express')
+const bodyParser = require('body-parser')
+const socketIo =require('socket.io')
+const http = require('http')
 
-webServer.init(gameManager);
-let socketServer = new IoServer(webServer.getIo());
-gameManager.init(socketServer);
+const gameManager = require('./games')
+const api = require('./api')
+const IoServer = require('./socketServer')
+
+const app = express()
+const server = http.Server(app)
+const io = socketIo(server)
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended : true}))
+app.use('/api', api)
+
+let socketServer = new IoServer(io)
+gameManager.init(socketServer)
+
+server.listen(5050)
