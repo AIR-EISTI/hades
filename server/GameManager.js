@@ -60,7 +60,7 @@ class GameManager {
   }
 
   processOnError (game, err) {
-    console.error('[' + game.pid + '-' + gamesProcess[game.pid].name + '] [ERROR] ' + err)
+    console.error('[' + game.pid + '-' + this.gamesProcess[game.pid].name + '] [ERROR] ' + err)
     this.gamesProcess[game.pid].status = 'ERROR'
     this.socketServer.emitServerList(this.getServersList())
     this.socketServer.emitUpdateStatus(game.pid, this.gamesProcess[game.pid])
