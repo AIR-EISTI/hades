@@ -3,8 +3,8 @@ const bodyParser = require('body-parser')
 const socketIo =require('socket.io')
 const http = require('http')
 
-const gameManager = require('./games')
 const api = require('./api')
+const GameManager = require('./GameManager')
 const SocketService = require('./SocketService')
 
 const app = express()
@@ -16,6 +16,6 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use('/api', api)
 
 let socketService = new SocketService(io)
-gameManager.init(socketService)
+GameManager.socketServer = socketService
 
 server.listen(5050)

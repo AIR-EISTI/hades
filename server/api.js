@@ -1,7 +1,7 @@
 const express = require('express')
 
 const ConfigManager = require('./ConfigManager')
-const gameManager = require('./games')
+const GameManager = require('./GameManager')
 
 const router = express.Router()
 
@@ -19,7 +19,7 @@ router.get('/games/:game', function getGame(req, res){
 });
 
 router.delete('/servers/:pid',function killServer(req,res){
-  let gamesObj = gameManager.getServers()
+  let gamesObj = GameManager.gamesProcess
   let pid = req.params.pid
   if(pid in gamesObj) {
     gamesObj[pid].process.kill('SIGTERM')
@@ -30,24 +30,26 @@ router.delete('/servers/:pid',function killServer(req,res){
 })
 
 router.post('/servers', function createServer(req, res){
-  // TODO Do not work anymore
-  /*let gameName = req.body.game || "";
-  let variables = req.body.vars || {};
-  let finalConfig = configManager.setVariables(gameName, variables);
-  finalConfig.nickname = req.body.nickname;
-  let returnValue = gameManager.startGame(finalConfig);
+  let gameName = req.body.game
+  let gameConfig = ConfigManager.getConfig(gameName)
+  if (gameConfig === null) {
+    return res.send(404)
+  }
 
-  res.json(returnValue);*/
-  res.status(501)
-  res.json({msg: 'Not implemented'})
+  let variables = {}
+  for (let variable of gameConfig.vars) {
+    variables[variable.name] = req.body.vars[variable.name] || variable.default
+  }
+
+  res.json(GameManager.startGame(req.body.nickname, gameConfig, variables))
 })
 
 router.get('/servers', function getServers(req, res){
-  return res.json(gameManager.getServersList())
+  return res.json(GameManager.getServersList())
 })
 
 router.get('/servers/:pid', function getServer(req, res){
-  let gamesObj = gameManager.getServers()
+  let gamesObj = GameManager.gamesProcess
   let pid = req.params.pid
   if(!(pid in gamesObj))
     return res.sendStatus(404)
@@ -60,7 +62,7 @@ router.get('/servers/:pid', function getServer(req, res){
 })
 
 router.post('/servers/:pid/stdin', function pushCommand(req, res){
-  let resCode = gameManager.pushStdin(req.params.pid, req.body.command+'\n')
+  let resCode = GameManager.pushStdin(req.params.pid, req.body.command+'\n')
   if(resCode === 0){
     return res.sendStatus(200)
   }
