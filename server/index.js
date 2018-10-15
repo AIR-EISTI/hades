@@ -5,7 +5,7 @@ const http = require('http')
 
 const gameManager = require('./games')
 const api = require('./api')
-const IoServer = require('./socketServer')
+const SocketService = require('./SocketService')
 
 const app = express()
 const server = http.Server(app)
@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use('/api', api)
 
-let socketServer = new IoServer(io)
-gameManager.init(socketServer)
+let socketService = new SocketService(io)
+gameManager.init(socketService)
 
 server.listen(5050)
