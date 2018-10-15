@@ -12,7 +12,7 @@ router.get('/games', (req, res) => {
 router.get('/games/:game', (req, res) => {
   let gameName = req.params.game
   let gameConfig = ConfigManager.getConfig(gameName)
-  if(gameConfig) {
+  if (gameConfig) {
     res.json(gameConfig)
   } else {
     res.sendStatus(404)
@@ -21,7 +21,7 @@ router.get('/games/:game', (req, res) => {
 
 router.delete('/servers/:pid',(req,res) => {
   let game = GameManager.gamesProcess[req.params.pid]
-  if(!game) {
+  if (!game) {
     res.sendStatus(404)
   }
   game.process.kill('SIGTERM')
@@ -31,6 +31,7 @@ router.delete('/servers/:pid',(req,res) => {
 router.post('/servers', (req, res) => {
   let gameName = req.body.game
   let gameConfig = ConfigManager.getConfig(gameName)
+
   if (gameConfig === null) {
     return res.sendStatus(404)
   }
@@ -50,8 +51,9 @@ router.get('/servers', (req, res) => {
 router.get('/servers/:pid', (req, res) => {
   let server = GameManager.gamesProcess[req.params.pid]
 
-  if(!server)
+  if (!server) {
     return res.sendStatus(404)
+  }
 
   let returnObject = {...server}
   delete returnObject['process']
@@ -60,11 +62,14 @@ router.get('/servers/:pid', (req, res) => {
 })
 
 router.post('/servers/:pid/stdin', (req, res) => {
-  let resCode = GameManager.pushStdin(req.params.pid, req.body.command+'\n')
-  if(resCode === 0){
-    return res.sendStatus(204)
+  let pid = Number(req.params.pid)
+
+  if (!(pid in GameManager.gamesProcess)) {
+    return res.sendStatus(404)
   }
-  res.sendStatus(404)
+
+  GameManager.pushStdin(req.params.pid, req.body.command+'\n')
+  return res.sendStatus(202)
 })
 
 

@@ -1,5 +1,5 @@
 class SocketService {
-  constructor (io) {
+  init (io) {
     this.io = io
 
     this.nspServers = this.io.of('/servers')
@@ -33,4 +33,4 @@ class SocketService {
   }
 }
 
-module.exports = SocketService
+module.exports = new SocketService()

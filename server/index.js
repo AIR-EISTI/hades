@@ -15,7 +15,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use('/api', api)
 
-let socketService = new SocketService(io)
-GameManager.socketServer = socketService
+SocketService.init(io)
 
 server.listen(5050)
