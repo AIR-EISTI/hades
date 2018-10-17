@@ -13,6 +13,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "types": ["xterm"],
     "lib": [
       "es2017",
       "dom"
