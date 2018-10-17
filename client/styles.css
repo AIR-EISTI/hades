@@ -1,5 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-main,body,app-root
+
+body
+{
+    --main-bg-color: linear-gradient(45deg, #2b3044 0%, #43526d 100%);
+    --nav-bg-color:rgb(49, 40, 82);
+    --text-color:rgb(117, 130, 155);
+    --text-visible-color:rgb(220,220,220);
+    --border-nav-color:rgba(255,255,255,0.1)
+}
+
+
+html,body,app-root
 {
     margin: 0;
     height: 100%;
@@ -12,15 +23,46 @@ app-root
     flex-direction: row;
     height: 100%;
     align-items: stretch;
+    background:var(--main-bg-color) ;
+    color:var(--text-color) ;
 }
+
+
 
 app-root > section
 {
     flex:1;
 }
 
+.center
+{
+    text-align: center;
+}
+
+h1,h2
+{
+    color:var(--text-visible-color)
+}
+
+
 nav
 {
-    padding: 10px;
+    padding: 20px 40px;
+    background:var(--main-bg-color) ;
+    min-width: 200px;
+    border-right: 1px solid var(--border-nav-color)
+
+}
+
+nav a
+{
+
+    color:var(--text-color);
+    text-decoration: none;
+}
+
+nav a > div
+{
+    margin: 30px 10px;
 }
 
