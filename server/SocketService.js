@@ -9,6 +9,7 @@ class SocketService extends EventEmitter {
     this.connections = new Set()
     this.on('enter-server', this.onEnterServer)
     this.on('leave-server', this.onLeaveServer)
+    this.on('term-data', this.onTermData)
   }
 
   register (ws) {
@@ -30,6 +31,7 @@ class SocketService extends EventEmitter {
       this.emit('leave-serve')
     this.serversToConn[pid].add(ws)
     this.connToServers.set(ws, pid)
+    this.emit(`enter-server@${pid}`, ws)
   }
 
   onLeaveServer (ws) {
@@ -46,6 +48,13 @@ class SocketService extends EventEmitter {
     this.connections.delete(ws)
   }
 
+  onTermData (ws, msg) {
+    let pid = this.connToServers.get(ws)
+    if (pid) {
+      this.emit(`term-data@${pid}`, ws, msg)
+    }
+  }
+
   emitTerminalData (pid, data) {
     this.to(pid, 'term-data', data)
   }
@@ -55,8 +64,10 @@ class SocketService extends EventEmitter {
   }
 
   to (pid, event, data) {
-    let finalData = JSON.parse({event, data})
-    for (let ws of this.connToServers[pid]) {
+    let finalData = JSON.stringify({event, data})
+    if (!this.serversToConn[pid])
+      return
+    for (let ws of this.serversToConn[pid]) {
       ws.send(finalData)
     }
   }

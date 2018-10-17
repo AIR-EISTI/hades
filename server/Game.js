@@ -12,7 +12,7 @@ class Game {
     this.command = command
     this.args = args
     this.exitCode = null
-    this.stdout = []
+    this.stdout = ''
 
     this.proc = pty.spawn(command, args, {
       uid: config.uid,
@@ -26,12 +26,17 @@ class Game {
   initEventGame () {
     this.proc.on('exit', this.processOnClose.bind(this))
     this.proc.on('error', this.processOnError.bind(this))
-    this.proc.on('data', this.processOnStdout.bind(this))
-    SocketService.on('term-data', this.onTermData.bind(this))
+    this.proc.on('data', this.processOnData.bind(this))
+    SocketService.on(`term-data@${this.proc.pid}`, this.onTermData.bind(this))
+    SocketService.on(`enter-server@${this.proc.pid}`, this.onEnterServer.bind(this))
   }
 
   onTermData (ws, msg) {
     this.pushStdin(msg)
+  }
+
+  onEnterServer (ws, msg) {
+    ws.send(JSON.stringify({event: 'term-data', data: this.stdout}))
   }
 
   processOnClose (code, signal) {
@@ -40,12 +45,13 @@ class Game {
     console.log('[' + this.proc.pid + '-' + this.name + '] Process endend with code '+ this.exitCode)
     //SocketService.emitServerList(this.getServersList())
     //SocketService.emitUpdateStatus(this.proc.pid, this)
-    this.addLineToHist(this.exitCode === 0 ? 'INFO' : 'WARN', 'Process endend with code '+ this.exitCode)
+    //this.addLineToHist(this.exitCode === 0 ? 'INFO' : 'WARN', 'Process endend with code '+ this.exitCode)
   }
 
-  processOnStdout (data) {
+  processOnData (data) {
     //this.addLineToHist('STDOUT', data.toString())
-    SocketService.broadcast('term-data', data.toString())
+    this.stdout += data
+    SocketService.to(this.proc.pid, 'term-data', data.toString())
   }
 
   processOnError (err) {
@@ -53,27 +59,11 @@ class Game {
     this.status = 'ERROR'
     //SocketService.emitServerList(this.getServersList())
     //SocketService.emitUpdateStatus(this.proc.pid, this)
-    this.addLineToHist('ERROR', err.toString())
-  }
-
-  addLineToHist (type, data) {
-    let typeMap = {
-      'WARN' : 'W',
-      'INFO' : 'I',
-      'ERROR' : 'E',
-      'STDOUT' : '>',
-      'STDIN' : '<',
-      'STDERR' : '!!'
-    }
-    let line = {type : typeMap[type], data}
-    this.stdout.push(line)
-    this.stdout = this.stdout.slice(-100)
-    //SocketService.emitConsole(pid, line)
+    //this.addLineToHist('ERROR', err.toString())
   }
 
   pushStdin (data) {
     this.proc.write(data)
-    //this.addLineToHist('STDIN', data)
   }
 
   kill () {

@@ -11,12 +11,14 @@ export class WebSocketService {
 
   private webSocket: WebSocket;
   private eventFeed: Observable<SocketMessage>;
+  private buffer: SocketMessage[] = [];
 
   constructor() {
     let protocol = location.protocol === 'https' ? 'wss' : 'ws';
     let port = location.port ? `:${location.port}` : ''
     let webSocketUrl = `${protocol}://${location.hostname}${port}/ws`
     this.webSocket = new WebSocket(webSocketUrl)
+    this.webSocket.addEventListener('open', this.onOpen.bind(this))
     this.eventFeed = this.createEventFeed()
   }
 
@@ -32,8 +34,20 @@ export class WebSocketService {
     return this.eventFeed.pipe(filter(msg => msg.event === eventName))
   }
 
-  public send(event: String, data: any) {
+  public send(event: String, data: any = null) {
     let msg: SocketMessage = {event, data}
-    this.webSocket.send(JSON.stringify(msg))
+    console.log('send')
+    if (this.webSocket.readyState === WebSocket.OPEN) {
+      this.webSocket.send(JSON.stringify(msg))
+    } else {
+      this.buffer.push(msg)
+    }
+  }
+
+  private onOpen() {
+    console.log('open')
+    for (let msg of this.buffer) {
+      this.webSocket.send(JSON.stringify(msg))
+    }
   }
 }
