@@ -24,11 +24,11 @@
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
+    "express-ws": "^4.0.0",
     "jsonfile": "^5.0.0",
     "node-pty": "^0.7.8",
     "nodemon": "^1.18.4",
     "rxjs": "~6.2.0",
-    "socket.io": "^2.1.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
