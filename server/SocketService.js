@@ -16,7 +16,6 @@ class SocketService extends EventEmitter {
     ws.on('message', (msg) => {
       try {
         let {event, data} = JSON.parse(msg)
-        console.log(event, data)
         this.emit(event, ws, data)
       } catch (e) {}
     })

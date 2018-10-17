@@ -27,6 +27,11 @@ class Game {
     this.proc.on('exit', this.processOnClose.bind(this))
     this.proc.on('error', this.processOnError.bind(this))
     this.proc.on('data', this.processOnStdout.bind(this))
+    SocketService.on('term-data', this.onTermData.bind(this))
+  }
+
+  onTermData (ws, msg) {
+    this.pushStdin(msg)
   }
 
   processOnClose (code, signal) {
@@ -39,7 +44,8 @@ class Game {
   }
 
   processOnStdout (data) {
-    this.addLineToHist('STDOUT', data.toString())
+    //this.addLineToHist('STDOUT', data.toString())
+    SocketService.broadcast('term-data', data.toString())
   }
 
   processOnError (err) {
@@ -67,7 +73,7 @@ class Game {
 
   pushStdin (data) {
     this.proc.write(data)
-    this.addLineToHist('STDIN', data)
+    //this.addLineToHist('STDIN', data)
   }
 
   kill () {

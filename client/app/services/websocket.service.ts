@@ -31,4 +31,9 @@ export class WebSocketService {
   public getEventFeed(eventName: String):Observable<SocketMessage> {
     return this.eventFeed.pipe(filter(msg => msg.event === eventName))
   }
+
+  public send(event: String, data: any) {
+    let msg: SocketMessage = {event, data}
+    this.webSocket.send(JSON.stringify(msg))
+  }
 }

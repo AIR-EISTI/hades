@@ -31,20 +31,14 @@ export class ConsoleComponent implements OnInit {
     this.terminal.addDisposableListener('key', this.termKeyPressed.bind(this))
   }
 
-  termKeyPressed(key, event) {
-    if (event.keyCode === 8) {
-      this.terminal.write('\b \b')
-    } else if (event.keyCode === 13) {
-      this.terminal.write('\r\n')
-    } else {
-      this.terminal.write(key)
-    }
+  termKeyPressed(key) {
+    this.webSocketService.send('term-data', key)
   }
 
   ngOnInit() {
     this.consoleFeed = this.webSocketService.getEventFeed('term-data')
     this.consoleFeed.subscribe((msg: SocketMessage) => {
-      console.log(msg)
+      this.terminal.write(msg.data)
     })
     this.terminal.open(this.terminalElement.nativeElement)
   }
