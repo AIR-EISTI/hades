@@ -12,6 +12,7 @@ class SocketService extends EventEmitter {
   }
 
   register (ws) {
+    this.connections.add(ws)
     ws.on('message', (msg) => {
       try {
         let {event, data} = JSON.parse(msg)
