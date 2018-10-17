@@ -17,7 +17,7 @@ class SocketService extends EventEmitter {
         let {event, data} = JSON.parse(msg)
         console.log(event, data)
         this.emit(event, ws, data)
-      } catch {}
+      } catch (e) {}
     })
     ws.on('close', this.onLeaveServer.bind(this, ws))
     ws.on('close', this.onClose.bind(this, ws))
