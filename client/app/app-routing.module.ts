@@ -6,7 +6,7 @@ import { ConsoleComponent } from './console/console.component';
 
 const routes: Routes = [
   {path: "games", component: GamesComponent},
-  {path: "game/:name", component: GameDetailComponent},
+  {path: "games/:name", component: GameDetailComponent},
   {path: "console", component: ConsoleComponent}
 ]
 

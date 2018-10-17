@@ -6,7 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { GamesComponent } from './games/games.component';
 import { GameDetailComponent } from './game-detail/game-detail.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ConsoleComponent } from './console/console.component'
+import { ConsoleComponent } from './console/console.component';
+import { InputComponent } from './input/input.component';
+import { ButtonComponent } from './button/button.component'
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { ConsoleComponent } from './console/console.component'
     GamesComponent,
     GameDetailComponent,
     ConsoleComponent,
+    InputComponent,
+    ButtonComponent,
   ],
   imports: [
     BrowserModule,

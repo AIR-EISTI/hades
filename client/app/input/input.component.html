@@ -1,0 +1,4 @@
+<div>
+  <label [ngClass]="{'selected': focus}">{{label}}</label>
+  <input (focus)="setFocus()" (focusout)="undoFocus()" type="text" value="{{default_value}}">
+</div>
