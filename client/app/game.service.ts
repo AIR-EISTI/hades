@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable , of} from 'rxjs'
+import { Injectable } from '@angular/core';
 import { Game } from './game';
 
 @Injectable({
@@ -12,9 +13,7 @@ export class GameService {
   }
 
   
-  getGames() : Promise<Game[]>{
-    return this.http.get("http://localhost:4200/api/games/")
-      .toPromise()
-      .then(response => response as Game[]);
+  getGames() : Observable<Game[]>{
+    return this.http.get<Game[]>("http://localhost:4200/api/games/");
   }
 }
