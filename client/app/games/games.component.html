@@ -1,0 +1,5 @@
+<ul *ngFor="let game of games">
+  <a  [routerLink]="['/games', game.name]" >
+    {{game.name}}
+  </a>
+</ul>
