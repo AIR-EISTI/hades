@@ -1,5 +1,6 @@
-<ul *ngFor="let game of games">
-  <a  [routerLink]="['/games', game.name]" >
-    {{game.name}}
-  </a>
-</ul>
+<a  *ngFor="let game of games" [routerLink]="['/games', game.name]" >
+  <div>
+  {{game.name}}
+  </div>
+</a>
+
