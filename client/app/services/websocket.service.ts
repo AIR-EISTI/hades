@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { SocketMessage } from '../models/WebSocket';
+import { SocketMessage } from '../models/websocket';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,6 @@ export class WebSocketService {
 
   public send(event: String, data: any = null) {
     let msg: SocketMessage = {event, data}
-    console.log('send')
     if (this.webSocket.readyState === WebSocket.OPEN) {
       this.webSocket.send(JSON.stringify(msg))
     } else {
@@ -45,7 +44,6 @@ export class WebSocketService {
   }
 
   private onOpen() {
-    console.log('open')
     for (let msg of this.buffer) {
       this.webSocket.send(JSON.stringify(msg))
     }

@@ -53,21 +53,7 @@ router.get('/servers/:pid', (req, res) => {
     return res.sendStatus(404)
   }
 
-  let returnObject = {...server}
-  delete returnObject['proc']
-
-  res.json(returnObject)
-})
-
-router.post('/servers/:pid/stdin', (req, res) => {
-  let server = GameManager.getServer(req.params.pid)
-
-  if (!server) {
-    return res.sendStatus(404)
-  }
-
-  server.pushStdin(req.body.command+'\n')
-  return res.sendStatus(202)
+  res.json(server.getRepr())
 })
 
 

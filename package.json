@@ -22,7 +22,6 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
-    "@types/xterm": "^3.0.0",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",

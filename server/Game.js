@@ -17,7 +17,9 @@ class Game {
     this.proc = pty.spawn(command, args, {
       uid: config.uid,
       gid: config.gid,
-      cwd: config.cwd
+      cwd: config.cwd,
+      cols: 150,
+      rows: 30
     })
 
     this.initEventGame()
@@ -32,7 +34,7 @@ class Game {
   }
 
   onTermData (ws, msg) {
-    this.pushStdin(msg)
+    this.proc.write(msg)
   }
 
   onEnterServer (ws, msg) {
@@ -44,7 +46,7 @@ class Game {
     this.status = this.exitCode === 0 ? 'CLOSED' : 'WARN'
     console.log('[' + this.proc.pid + '-' + this.name + '] Process endend with code '+ this.exitCode)
     //SocketService.emitServerList(this.getServersList())
-    //SocketService.emitUpdateStatus(this.proc.pid, this)
+    SocketService.emitStatus(this.proc.pid, this.getRepr())
     //this.addLineToHist(this.exitCode === 0 ? 'INFO' : 'WARN', 'Process endend with code '+ this.exitCode)
   }
 
@@ -62,12 +64,15 @@ class Game {
     //this.addLineToHist('ERROR', err.toString())
   }
 
-  pushStdin (data) {
-    this.proc.write(data)
-  }
-
   kill () {
     this.proc.kill('SIGTERM')
+  }
+
+  getRepr () {
+    let returnObject = {...this}
+    delete returnObject['proc']
+    delete returnObject['stdout']
+    return returnObject
   }
 }
 

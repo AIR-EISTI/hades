@@ -1,0 +1,22 @@
+.status {
+  display: inline-block;
+  color: white;
+  padding: 3px;
+  border-radius: 5px;
+  position: relative;
+  bottom: 3px;
+  text-transform: capitalize;
+}
+
+.status.running {
+  background: green;
+}
+
+.status.closed {
+  background: grey;
+}
+
+h1 {
+  margin: 10px 10px;
+  display: inline-block;
+}

@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { Terminal } from 'xterm';
 
 import { WebSocketService } from '../services/websocket.service';
-import { SocketMessage } from '../models/WebSocket';
-
+import { SocketMessage } from '../models/websocket';
 
 @Component({
   selector: 'app-console',
@@ -27,7 +26,8 @@ export class ConsoleComponent implements OnInit {
     this.terminal = new Terminal({
       cursorBlink: true,
       scrollback: 60,
-      rows: 80
+      cols: 150,
+      rows: 30
     })
 
     this.terminal.addDisposableListener('key', this.termKeyPressed.bind(this))
@@ -38,7 +38,6 @@ export class ConsoleComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.webSocketService)
     this.webSocketService.send('enter-server', this.pid)
     this.consoleFeed = this.webSocketService.getEventFeed('term-data')
     this.consoleFeed.subscribe((msg: SocketMessage) => {

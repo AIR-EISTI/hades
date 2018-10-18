@@ -8,11 +8,11 @@ import { Game } from './game';
 })
 export class GameService {
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
 
   }
 
-  
+
   getGames() : Observable<Game[]>{
     return this.http.get<Game[]>("http://localhost:4200/api/games/");
   }

@@ -59,8 +59,8 @@ class SocketService extends EventEmitter {
     this.to(pid, 'term-data', data)
   }
 
-  emitServerStatusChange (pid, status) {
-    this.broadcast('server-status-change', status)
+  emitStatus (pid, status) {
+    this.broadcast('server-status', status)
   }
 
   to (pid, event, data) {

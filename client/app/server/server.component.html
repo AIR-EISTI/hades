@@ -1,1 +1,8 @@
+<ng-container *ngIf="server">
+  <div>
+    <h1>{{ server.nickname }} ({{ server.name }})</h1>
+    <span class="status" [ngClass]="server.status.toLowerCase()">{{ server.status.toLowerCase() }}</span>
+  </div>
+</ng-container>
+
 <app-console [pid]="pid"></app-console>
