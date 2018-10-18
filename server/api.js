@@ -56,5 +56,15 @@ router.get('/servers/:pid', (req, res) => {
   res.json(server.getRepr())
 })
 
+router.post('/servers/:pid/restart', (req, res) => {
+  let result = GameManager.restartGame(req.params.pid)
+
+  if (!result) {
+    return res.sendStatus(404)
+  }
+
+  res.status(result.status).json(result)
+})
+
 
 module.exports = router

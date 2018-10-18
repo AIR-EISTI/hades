@@ -45,13 +45,10 @@ class Game {
     this.exitCode = code
     this.status = this.exitCode === 0 ? 'CLOSED' : 'WARN'
     console.log('[' + this.proc.pid + '-' + this.name + '] Process endend with code '+ this.exitCode)
-    //SocketService.emitServerList(this.getServersList())
     SocketService.emitStatus(this.proc.pid, this.getRepr())
-    //this.addLineToHist(this.exitCode === 0 ? 'INFO' : 'WARN', 'Process endend with code '+ this.exitCode)
   }
 
   processOnData (data) {
-    //this.addLineToHist('STDOUT', data.toString())
     this.stdout += data
     SocketService.to(this.proc.pid, 'term-data', data.toString())
   }
@@ -59,9 +56,7 @@ class Game {
   processOnError (err) {
     console.error('[' + this.proc.pid + '-' + this.name + '] [ERROR] ' + err)
     this.status = 'ERROR'
-    //SocketService.emitServerList(this.getServersList())
     //SocketService.emitUpdateStatus(this.proc.pid, this)
-    //this.addLineToHist('ERROR', err.toString())
   }
 
   kill () {

@@ -3,6 +3,7 @@ const fs = require('fs')
 const pty = require('node-pty')
 
 const SocketService = require('./SocketService')
+const ConfigManager = require('./ConfigManager')
 const Game = require('./Game')
 
 class GameManager {
@@ -52,6 +53,25 @@ class GameManager {
       variables[variable.name] = userVars[variable.name] || variable.default
     }
     return variables
+  }
+
+  restartGame (pid) {
+    let server = this.getServer(pid)
+
+    if (!server)
+      return null
+    console.log(server.exitCode, server)
+    if (server.exitCode === null)
+      return {success: false, status: 409, message: 'Server is running'}
+
+    let config = ConfigManager.getConfig(server.name)
+    if (!config)
+      return {success: false, status: 410, message: 'Config could not be found'}
+    let {nickname, command, args} = server
+    let game = new Game(config, nickname, command, args)
+    this.serversProcess[game.proc.pid] = game
+
+    return {success: true, status: 200, pid: game.proc.pid}
   }
 
 }
