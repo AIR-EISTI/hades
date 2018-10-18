@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Game } from '../game';
-import { GameService } from '../game.service';
+import { Game } from '../models/game';
+import { GameService } from '../services/game.service';
 
 
 
@@ -19,12 +19,12 @@ export class GamesComponent implements OnInit {
     this.getGames()
   }
 
-  
+
   getGames(): void {
     this.gameService.getGames().subscribe(
       games => this.games = games,
       error => console.log(error)
     )
   }
-  
+
 }
