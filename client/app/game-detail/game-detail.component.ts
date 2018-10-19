@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { Game } from '../models/game';
 import { GameService } from '../services/game.service';
 
@@ -18,17 +19,14 @@ export class GameDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getGame()
-
-  }
-
-
-  getGame(): void {
-    this.gameName = this.route.snapshot.paramMap.get('name');
-    this.gameService.getOneGame(this.gameName).subscribe(
-      game => this.game = game,
-      error => console.log(error)
-    )
+    this.route.paramMap
+      .pipe(switchMap((params: ParamMap) => {
+        this.gameName = params.get('name')
+        return this.gameService.getOneGame(this.gameName)
+      })).subscribe(
+        game => this.game = game,
+        error => console.log(error)
+      )
   }
 
 }
