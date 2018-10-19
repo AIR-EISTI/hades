@@ -28,7 +28,7 @@ class SocketService extends EventEmitter {
     if (!(pid in this.serversToConn))
       this.serversToConn[pid] = new Set()
     if (this.connToServers.has(ws))
-      this.emit('leave-serve')
+      this.emit('leave-server')
     this.serversToConn[pid].add(ws)
     this.connToServers.set(ws, pid)
     this.emit(`enter-server@${pid}`, ws)
@@ -60,7 +60,6 @@ class SocketService extends EventEmitter {
   }
 
   emitStatus (status) {
-    console.log(status)
     this.broadcast('server-status', status)
   }
 

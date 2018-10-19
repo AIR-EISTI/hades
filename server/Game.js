@@ -4,8 +4,6 @@ const SocketService = require('./SocketService')
 
 class Game {
   constructor (config, nickname, command, args) {
-    console.log('New game starting: ', config.name)
-
     this.nickname = nickname
     this.name = config.name
     this.status = 'RUNNING'
@@ -43,9 +41,9 @@ class Game {
 
   processOnClose (code, signal) {
     this.exitCode = code
-    this.status = this.exitCode === 0 ? 'CLOSED' : 'WARN'
+    this.status = 'CLOSED'
     console.log('[' + this.proc.pid + '-' + this.name + '] Process endend with code '+ this.exitCode)
-    SocketService.emitStatus(this.proc.pid, this.getRepr())
+    SocketService.emitStatus(this.getRepr())
   }
 
   processOnData (data) {

@@ -52,7 +52,7 @@ export class ConsoleComponent implements OnInit, OnChanges {
   ngOnChanges (changes: SimpleChanges) {
     if (changes.firstChange)
       return
-    this.terminal.clear()
+    this.terminal.reset()
     this.webSocketService.send('enter-server', this.pid)
   }
 }
