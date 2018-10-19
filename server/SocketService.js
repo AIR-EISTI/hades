@@ -28,7 +28,7 @@ class SocketService extends EventEmitter {
     if (!(pid in this.serversToConn))
       this.serversToConn[pid] = new Set()
     if (this.connToServers.has(ws))
-      this.emit('leave-server')
+      this.emit('leave-server', ws)
     this.serversToConn[pid].add(ws)
     this.connToServers.set(ws, pid)
     this.emit(`enter-server@${pid}`, ws)
@@ -64,6 +64,7 @@ class SocketService extends EventEmitter {
   }
 
   emitServerDeleted (pid) {
+    console.log('plop', pid)
     this.broadcast('server-deleted', pid)
   }
 
@@ -72,14 +73,20 @@ class SocketService extends EventEmitter {
     if (!this.serversToConn[pid])
       return
     for (let ws of this.serversToConn[pid]) {
-      ws.send(finalData)
+      this.safeSend(ws, finalData)
     }
   }
 
   broadcast (event, data) {
     let finalData = JSON.stringify({event, data})
     for (let ws of this.connections) {
-      ws.send(finalData)
+      this.safeSend(ws, finalData)
+    }
+  }
+
+  safeSend (ws, data) {
+    if (ws.readyState === ws.OPEN) {
+      return ws.send(data)
     }
   }
 }

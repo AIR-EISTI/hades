@@ -18,8 +18,13 @@ class GameManager {
 
     let game = new Game(config, nickname, command, args)
     this.serversProcess[game.proc.pid] = game
-    SocketService.emitStatus(game.getRepr())
     return {pid: game.proc.pid, command: [command, ...args].join(' ')}
+  }
+
+  undefineGame(server) {
+    let pid = server.proc.pid
+    delete this.serversProcess[pid]
+    SocketService.emitServerDeleted(pid)
   }
 
   buildCommand (config, variables) {
@@ -58,24 +63,12 @@ class GameManager {
     return variables
   }
 
-  restartGame (pid) {
-    let server = this.getServer(pid)
-
-    if (!server)
-      return null
-    console.log(server.exitCode, server)
-    if (server.exitCode === null)
-      return {success: false, status: 409, message: 'Server is running'}
-
-    let config = ConfigManager.getConfig(server.name)
-    if (!config)
-      return {success: false, status: 410, message: 'Config could not be found'}
-
+  restartGame (server, config) {
+    this.undefineGame(server)
     let {nickname, command, args} = server
     let game = new Game(config, nickname, command, args)
     this.serversProcess[game.proc.pid] = game
-
-    return {success: true, status: 200, pid: game.proc.pid}
+    return game.proc.pid
   }
 
 }

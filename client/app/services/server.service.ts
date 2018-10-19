@@ -21,6 +21,14 @@ export class ServerService {
 
 
   public stopServer(pid): Observable<any> {
+    return this.http.post(`/api/servers/${pid}/stop`, null)
+  }
+
+  public restartServer(pid): Observable<any> {
+    return this.http.post(`/api/servers/${pid}/restart`, null)
+  }
+
+  public undefineServer(pid): Observable<any> {
     return this.http.delete(`/api/servers/${pid}`)
   }
 }

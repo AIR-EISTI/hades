@@ -19,7 +19,7 @@ class Game {
       cols: 150,
       rows: 30
     })
-
+    SocketService.emitStatus(this.getRepr())
     this.initEventGame()
   }
 

@@ -24,6 +24,10 @@ export class ServersListComponent implements OnInit {
     this.webSocketService.getEventFeed('server-status').subscribe(
       msg => this.servers[msg.data.pid] = msg.data
     )
+
+    this.webSocketService.getEventFeed('server-deleted').subscribe(
+      msg => delete this.servers[msg.data]
+    )
   }
 
 }
