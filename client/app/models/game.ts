@@ -9,3 +9,7 @@ export class Game {
     vars: Array<Variable>;
     command?: Array<string>;
 }
+
+export class GameList {
+  [name: string]: Game;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Game } from '../models/game';
+import { GameList } from '../models/game';
 import { GameService } from '../services/game.service';
-
+import { WebSocketService } from '../services/websocket.service';
 
 
 @Component({
@@ -11,12 +11,18 @@ import { GameService } from '../services/game.service';
 })
 export class GamesComponent implements OnInit {
 
-  games : Game[];
+  games : GameList;
 
-  constructor(public gameService: GameService) { }
+  constructor(public gameService: GameService, public webSocketService: WebSocketService) { }
 
   ngOnInit() {
     this.getGames()
+    this.webSocketService.getEventFeed('game-loaded').subscribe(
+      msg => this.games[msg.data.name] = msg.data
+    )
+    this.webSocketService.getEventFeed('game-deleted').subscribe(
+      msg => delete this.games[msg.data]
+    )
   }
 
 

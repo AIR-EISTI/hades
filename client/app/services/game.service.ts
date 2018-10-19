@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Game } from '../models/game';
+import { GameList, Game } from '../models/game';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class GameService {
 
   }
 
-  getGames(): Observable<Game[]> {
-    return this.http.get<Game[]>('/api/games');
+  getGames(): Observable<GameList> {
+    return this.http.get<GameList>('/api/games');
   }
 
   getGame(gameName): Observable<Game> {

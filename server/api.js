@@ -6,7 +6,7 @@ const GameManager = require('./GameManager')
 const router = express.Router()
 
 router.get('/games', (req, res) => {
-  res.json(Object.values(ConfigManager.games))
+  res.json(ConfigManager.games)
 })
 
 router.get('/games/:game', (req, res) => {

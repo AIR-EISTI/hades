@@ -67,6 +67,15 @@ class SocketService extends EventEmitter {
     this.broadcast('server-deleted', pid)
   }
 
+  emitGameLoaded (config) {
+    this.broadcast('game-loaded', config)
+  }
+
+  emitGameDeleted (name) {
+    console.log(name)
+    this.broadcast('game-deleted', name)
+  }
+
   to (pid, event, data) {
     let finalData = JSON.stringify({event, data})
     if (!this.serversToConn[pid])
