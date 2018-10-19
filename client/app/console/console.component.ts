@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Terminal } from 'xterm';
 
@@ -12,7 +12,7 @@ import { SocketMessage } from '../models/websocket';
     './console.component.css'
   ]
 })
-export class ConsoleComponent implements OnInit {
+export class ConsoleComponent implements OnInit, OnChanges {
 
   private consoleFeed: Observable<SocketMessage>;
   private terminal: Terminal;
@@ -38,7 +38,6 @@ export class ConsoleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.webSocketService.send('enter-server', this.pid)
     this.consoleFeed = this.webSocketService.getEventFeed('term-data')
     this.consoleFeed.subscribe((msg: SocketMessage) => {
       this.terminal.write(msg.data)
@@ -48,5 +47,12 @@ export class ConsoleComponent implements OnInit {
 
   ngOnDestroy() {
     this.webSocketService.send('lever-server')
+  }
+
+  ngOnChanges (changes: SimpleChanges) {
+    if (changes.firstChange)
+      return
+    this.terminal.clear()
+    this.webSocketService.send('enter-server', this.pid)
   }
 }

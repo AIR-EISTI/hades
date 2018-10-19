@@ -1,0 +1,6 @@
+<h2>Servers</h2>
+<a  *ngFor="let server of servers" [routerLink]="['/servers', server.pid]" >
+  <div>
+  {{server.name}}
+  </div>
+</a>

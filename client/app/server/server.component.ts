@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { ServerInfo } from '../models/server';
 import { ServerService } from '../services/server.service';
@@ -20,11 +22,16 @@ export class ServerComponent implements OnInit {
               private webSocketService: WebSocketService) { }
 
   ngOnInit() {
-    this.pid = Number(this.route.snapshot.paramMap.get('pid'));
-    this.serverService.getServerInfo(this.pid).subscribe(
-      serverInfo => this.server = serverInfo,
+    let serverObs: Observable<ServerInfo> = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
+      this.pid = Number(params.get('pid'));
+      return this.serverService.getServerInfo(this.pid)
+    }))
+
+    serverObs.subscribe(
+      server => this.server = server,
       error => console.log(error)
     )
+
     this.webSocketService.getEventFeed('server-status').subscribe(
       message => this.server = message.data
     )
