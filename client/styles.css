@@ -82,7 +82,27 @@ nav a > div
 
 }
 
+.server-status.badge {
+  display: inline-block;
+  color: white;
+  padding: 3px;
+  border-radius: 5px;
+  position: relative;
+  bottom: 3px;
+  text-transform: capitalize;
+}
 
+.server-status.running {
+  background: green;
+}
 
-/**** stars */
+.server-status.closed {
+  background: grey;
+}
 
+.server-status.pin {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
