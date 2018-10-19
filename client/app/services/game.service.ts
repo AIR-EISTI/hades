@@ -12,12 +12,11 @@ export class GameService {
 
   }
 
-
   getGames(): Observable<Game[]> {
-    return this.http.get<Game[]>('/api/games/');
+    return this.http.get<Game[]>('/api/games');
   }
 
-  getOneGame(gameName): Observable<Game> {
-    return this.http.get<Game>('/api/games/' + gameName);
+  getGame(gameName): Observable<Game> {
+    return this.http.get<Game>(`/api/games/${gameName}`);
   }
 }

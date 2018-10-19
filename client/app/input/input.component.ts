@@ -1,32 +1,53 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.css']
+  styleUrls: ['./input.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true
+    }
+  ]
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements OnInit, ControlValueAccessor {
 
-  focus:boolean;
   @Input() label: String;
-  @Input() default_value: String;
-
+  private focus: boolean = false;
+  private _value: String;
+  private propagateChange = (_: any) => {};
 
   constructor() { }
+
+  get value() {
+    return this._value
+  }
+
+  set value(newValue) {
+    this._value = newValue
+    this.propagateChange(this._value)
+  }
 
   ngOnInit() {
     this.focus = false;
   }
 
-  setFocus()
-  {
-    this.focus = true
+  toggleFocus() {
+    this.focus = !this.focus
   }
 
-  undoFocus()
-  {
-    this.focus = false
+  writeValue(value: string) {
+    this._value = value
   }
+
+  registerOnChange(fn) {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched() {}
 
 }

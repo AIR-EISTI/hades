@@ -12,3 +12,9 @@ export class ServerInfo{
 export class ServerList {
   [name: string]: ServerInfo
 }
+
+export class ServerForm {
+    nickname: string;
+    game: string;
+    vars: {[name: string]: string};
+}

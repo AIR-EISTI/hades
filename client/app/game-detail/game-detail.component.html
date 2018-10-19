@@ -1,7 +1,8 @@
-<h1 class="center">{{gameName}}</h1>  
+<h1 class="center">{{gameName}}</h1>
 <div class="container" *ngIf="game">
-    <app-input *ngFor="let variable of game.vars" [label]="variable.label" [default_value]="variable.default"></app-input>
-    <app-button></app-button>
+    <form (ngSubmit)="createGame()">
+      <app-input label="Nom du serveur" name="nickname" [(ngModel)]="form.nickname"></app-input>
+      <app-input *ngFor="let variable of game.vars" [label]="variable.label" [name]="variable.name" [(ngModel)]="form.vars[variable.name]"></app-input>
+      <app-button></app-button>
+    </form>
 </div>
-
-

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ServerInfo, ServerList } from '../models/server';
+import { ServerInfo, ServerList, ServerForm } from '../models/server';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,9 @@ export class ServerService {
 
   public undefineServer(pid): Observable<any> {
     return this.http.delete(`/api/servers/${pid}`)
+  }
+
+  public createServer(serverForm: ServerForm): Observable<any>{
+    return this.http.post('/api/servers', serverForm)
   }
 }
