@@ -70,6 +70,7 @@ class GameManager {
     let config = ConfigManager.getConfig(server.name)
     if (!config)
       return {success: false, status: 410, message: 'Config could not be found'}
+
     let {nickname, command, args} = server
     let game = new Game(config, nickname, command, args)
     this.serversProcess[game.proc.pid] = game

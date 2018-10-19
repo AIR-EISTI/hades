@@ -18,4 +18,9 @@ export class ServerService {
   public getServersList(): Observable<ServerList> {
     return this.http.get<ServerList>('/api/servers')
   }
+
+
+  public stopServer(pid): Observable<any> {
+    return this.http.delete(`/api/servers/${pid}`)
+  }
 }

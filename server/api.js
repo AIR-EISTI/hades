@@ -23,11 +23,11 @@ router.delete('/servers/:pid', (req,res) => {
   let game = GameManager.getServer(req.params.pid)
 
   if (!game) {
-    res.sendStatus(404)
+    return res.status(404).json({success: false, status: 404, message: 'No server found with this pid'})
   }
 
   game.kill()
-  return res.sendStatus(202)
+  return res.status(202).json({success: true})
 })
 
 router.post('/servers', (req, res) => {

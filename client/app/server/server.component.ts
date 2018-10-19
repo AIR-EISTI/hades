@@ -37,4 +37,8 @@ export class ServerComponent implements OnInit {
     )
   }
 
+  stopServer () {
+    this.serverService.stopServer(this.pid).subscribe()
+  }
+
 }
