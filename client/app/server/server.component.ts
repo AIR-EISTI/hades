@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { ServerInfo } from '../models/server';
 import { ServerService } from '../services/server.service';

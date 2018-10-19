@@ -64,7 +64,6 @@ class SocketService extends EventEmitter {
   }
 
   emitServerDeleted (pid) {
-    console.log('plop', pid)
     this.broadcast('server-deleted', pid)
   }
 
