@@ -64,7 +64,7 @@ class Game {
   }
 
   getRepr () {
-    let returnObject = {...this}
+    let returnObject = {...this, pid: this.proc.pid}
     delete returnObject['proc']
     delete returnObject['stdout']
     return returnObject

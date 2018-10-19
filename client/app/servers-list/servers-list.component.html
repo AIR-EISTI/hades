@@ -1,6 +1,6 @@
 <h2>Servers</h2>
-<a  *ngFor="let server of servers" [routerLink]="['/servers', server.pid]" >
+<a  *ngFor="let server of servers | keyvalue" [routerLink]="['/servers', server.key]" >
   <div>
-  <span class="server-status pin" [ngClass]="server.status.toLowerCase()"></span> {{server.name}}
+  <span class="server-status pin" [ngClass]="server.value.status.toLowerCase()"></span> {{server.value.nickname}}
   </div>
 </a>

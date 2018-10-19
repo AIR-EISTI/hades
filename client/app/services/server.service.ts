@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ServerInfo, Server } from '../models/server';
+import { ServerInfo, ServerList } from '../models/server';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class ServerService {
     return this.http.get<ServerInfo>(`/api/servers/${pid}`)
   }
 
-  public getServersList(): Observable<Server[]> {
-    return this.http.get<Server[]>('/api/servers')
+  public getServersList(): Observable<ServerList> {
+    return this.http.get<ServerList>('/api/servers')
   }
 }

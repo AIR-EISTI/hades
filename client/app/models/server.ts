@@ -1,9 +1,3 @@
-export class Server{
-  pid: string;
-  name: string;
-  status: string;
-}
-
 export class ServerInfo{
   name: string;
   nickname: string;
@@ -12,4 +6,9 @@ export class ServerInfo{
   args: Array<string>;
   stdout: Array<string>;
   exitCode: number;
+  pid: number;
+}
+
+export class ServerList {
+  [name: string]: ServerInfo
 }

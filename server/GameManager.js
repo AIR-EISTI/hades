@@ -18,6 +18,7 @@ class GameManager {
 
     let game = new Game(config, nickname, command, args)
     this.serversProcess[game.proc.pid] = game
+    SocketService.emitStatus(game.getRepr())
     return {pid: game.proc.pid, command: [command, ...args].join(' ')}
   }
 
@@ -38,9 +39,11 @@ class GameManager {
   }
 
   getServersList () {
-    return Object.values(this.serversProcess).map(proc => {
-      return {pid: proc.proc.pid, name: proc.nickname, status: proc.status}
+    let res = {}
+    Object.keys(this.serversProcess).forEach(pid => {
+      res[pid] = this.serversProcess[pid].getRepr()
     })
+    return res
   }
 
   getServer (pid) {

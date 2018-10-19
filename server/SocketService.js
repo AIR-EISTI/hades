@@ -59,8 +59,13 @@ class SocketService extends EventEmitter {
     this.to(pid, 'term-data', data)
   }
 
-  emitStatus (pid, status) {
+  emitStatus (status) {
+    console.log(status)
     this.broadcast('server-status', status)
+  }
+
+  emitServerDeleted (pid) {
+    this.broadcast('server-deleted', pid)
   }
 
   to (pid, event, data) {
