@@ -1,0 +1,4 @@
+<div>
+  <label [ngClass]="{'selected': focus}">{{label}}</label>
+  <input (focus)="toggleFocus()" (focusout)="toggleFocus()" type="text" [(ngModel)]="value">
+</div>

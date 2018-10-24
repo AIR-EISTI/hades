@@ -1,0 +1,13 @@
+<ng-container *ngIf="server">
+  <div>
+    <h1>{{ server.nickname }} ({{ server.name }})</h1>
+    <span class="server-status badge" [ngClass]="server.status.toLowerCase()">{{ server.status.toLowerCase() }}</span>
+    <div class="action">
+      <button aria-label="Stop" *ngIf="server.status === 'RUNNING'" (click)="stopServer()"><i class="fa fa-stop fa-1x" aria-hidden="true"></i></button>
+      <button aria-label="Start" *ngIf="server.status === 'CLOSED'" (click)="restartServer()"><i class="fa fa-play fa-1x"></i></button>
+      <button aria-label="Delete" *ngIf="server.status === 'CLOSED'" (click)="undefineServer()"><i class="fa fa-trash fa-1x"></i></button>
+    </div>
+  </div>
+</ng-container>
+
+<app-console [pid]="pid"></app-console>

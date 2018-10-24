@@ -1,0 +1,6 @@
+<h2>Games</h2>
+<a  *ngFor="let game of games | keyvalue" [routerLink]="['/games', game.value.name]" >
+  <div>
+  {{game.value.name}}
+  </div>
+</a>

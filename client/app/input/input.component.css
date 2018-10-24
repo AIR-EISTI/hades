@@ -1,0 +1,27 @@
+div
+{
+    margin: 20px;
+}
+
+label.selected
+{
+    color: orange; /*var(--text-visible-color)*/
+}
+
+input[type=text]
+{
+    display: block;
+    background-color: #0003;
+    height: 30px;
+    width: 100%;
+    color:var(--text-color);
+    border: 1px solid var(--border-nav-color);
+    margin: 5px 0px;
+    padding: 5px;
+}
+
+input:focus
+{
+    border-color:rgba(72, 112, 193, 1);
+    color:var(--text-visible-color)
+}
