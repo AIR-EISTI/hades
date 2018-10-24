@@ -9,9 +9,11 @@ const readdir = util.promisify(fs.readdir)
 const readFile = util.promisify(fs.readFile)
 const access = util.promisify(fs.access)
 
+const config = require('../config')
+
 class ConfigManager {
   constructor () {
-    this.configDir =  __dirname + '/configs/'
+    this.configDir = config.configDir
     this.matchFileRegex = /\.json$/
     this.games = {}
     this.fileNames = {}

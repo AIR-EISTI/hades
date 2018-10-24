@@ -1,6 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
+const config = require('../config')
+
 const app = express()
 
 const expressWs = require('express-ws')(app)
@@ -14,4 +16,4 @@ app.use(bodyParser.urlencoded({extended : true}))
 app.use('/api', api)
 app.use('/ws', ws)
 
-app.listen(5050)
+app.listen(config.hadesServerPort, config.hadesServerHost)
