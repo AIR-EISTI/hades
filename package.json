@@ -28,6 +28,7 @@
     "jsonfile": "^5.0.0",
     "node-pty": "^0.7.8",
     "nodemon": "^1.18.4",
+    "pidusage-tree": "^2.0.5",
     "rxjs": "~6.2.0",
     "xterm": "^3.8.0",
     "zone.js": "~0.8.26"

@@ -1,6 +1,11 @@
+const os = require('os')
 const pty = require('node-pty')
+const pidusageTree = require('pidusage-tree')
 
 const SocketService = require('./SocketService')
+
+const NB_CPU = os.cpus().length
+const TOT_MEM = os.totalmem()
 
 class Game {
   constructor (config, nickname, command, args) {
@@ -11,6 +16,7 @@ class Game {
     this.args = args
     this.exitCode = null
     this.stdout = ''
+    this.statsInterval = null
 
     this.proc = pty.spawn(command, args, {
       uid: config.uid,
@@ -21,6 +27,7 @@ class Game {
     })
     SocketService.emitStatus(this.getRepr())
     this.initEventGame()
+    this.initStats()
   }
 
   initEventGame () {
@@ -29,6 +36,21 @@ class Game {
     this.proc.on('data', this.processOnData.bind(this))
     SocketService.on(`term-data@${this.proc.pid}`, this.onTermData.bind(this))
     SocketService.on(`enter-server@${this.proc.pid}`, this.onEnterServer.bind(this))
+  }
+
+  initStats () {
+    this.statsInterval = setInterval(this.sendStats.bind(this), 5000)
+  }
+
+  async sendStats () {
+    let stats = Object.values(await pidusageTree(this.proc.pid))
+    let percentCpu = stats.map(s => s.cpu).reduce((a, b) => a + b, 0) / NB_CPU
+    let procMem = stats.map(s => s.memory).reduce((a, b) => a + b, 0)
+    SocketService.emitGameStats(this.proc.pid, {
+      cpu: percentCpu,
+      memory: procMem,
+      totalMemory: TOT_MEM
+    })
   }
 
   onTermData (ws, msg) {
@@ -54,6 +76,7 @@ class Game {
   processOnError (err) {
     console.error('[' + this.proc.pid + '-' + this.name + '] [ERROR] ' + err)
     this.status = 'ERROR'
+    clearInterval(this.statsInterval)
     //SocketService.emitUpdateStatus(this.proc.pid, this)
   }
 
@@ -65,6 +88,7 @@ class Game {
     let returnObject = {...this, pid: this.proc.pid}
     delete returnObject['proc']
     delete returnObject['stdout']
+    delete returnObject['statsInterval']
     return returnObject
   }
 }
