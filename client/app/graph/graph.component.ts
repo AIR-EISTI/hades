@@ -44,7 +44,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
         return this.yScale(d[this.prop]);
       }).x((_, i) => {
         return this.xScale(i);
-      }).curve(d3.curveNatural);
+      }).curve(d3.curveMonotoneX);
 
     this.areaGen = d3.area<Stat>()
       .y0(this.height)
@@ -52,7 +52,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
         return this.yScale(d[this.prop]);
       }).x((_, i) => {
         return this.xScale(i);
-      }).curve(d3.curveNatural);
+      }).curve(d3.curveMonotoneX);
 
     this.pathLine = svg.append('path')
       .attr('stroke', this.color)
