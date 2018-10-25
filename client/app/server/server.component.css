@@ -18,6 +18,11 @@ h1 {
 }
 
 
-.graph.memory {
+.graph .memory {
   margin-left: 20px;
+}
+
+.graph {
+  display: flex;
+  flex-direction: row;
 }

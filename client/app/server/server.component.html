@@ -8,8 +8,10 @@
       <button aria-label="Delete" *ngIf="server.status === 'CLOSED'" (click)="undefineServer()"><i class="fa fa-trash fa-1x"></i></button>
     </div>
   </div>
-  <app-graph width="400" height="100"></app-graph>
-  <app-graph width="400" height="100" prop="memory" [maxY]="server.totalMemory" class="memory graph"></app-graph>
+  <div class="graph">
+    <app-graph height="100"></app-graph>
+    <app-graph height="100" prop="memory" [maxY]="server.totalMemory" class="memory"></app-graph>
+  </div>
 </ng-container>
 
 <app-console [pid]="pid"></app-console>
