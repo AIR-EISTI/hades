@@ -9,8 +9,8 @@
     </div>
   </div>
   <div class="graph">
-    <app-graph height="100"></app-graph>
-    <app-graph height="100" prop="memory" [maxY]="server.totalMemory" class="memory" title="RAM" color="#a82dce"></app-graph>
+    <app-graph height="100" prop="cpu" label="CPU"></app-graph>
+    <app-graph height="100" prop="memory" [maxY]="server.totalMemory" class="memory" label="RAM" color="#a82dce"></app-graph>
   </div>
 </ng-container>
 

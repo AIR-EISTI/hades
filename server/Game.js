@@ -52,9 +52,8 @@ class Game {
       cpu: percentCpu,
       memory: procMem
     }
-    this.statsHist.push(finalStats)
-    if (this.statsHist.length > 60)
-      this.statsHist.splice(0, 1)
+    this.statsHist.unshift(finalStats)
+    this.statsHist.splice(61, 1)
     SocketService.emitGameStats(this.proc.pid, finalStats)
   }
 
