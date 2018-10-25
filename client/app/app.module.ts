@@ -11,7 +11,8 @@ import { ConsoleComponent } from './console/console.component';
 import { InputComponent } from './input/input.component';
 import { ButtonComponent } from './button/button.component'
 import { ServerComponent } from './server/server.component';
-import { ServersListComponent } from './servers-list/servers-list.component'
+import { ServersListComponent } from './servers-list/servers-list.component';
+import { GraphComponent } from './graph/graph.component'
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ServersListComponent } from './servers-list/servers-list.component'
     ButtonComponent,
     ServerComponent,
     ServersListComponent,
+    GraphComponent,
   ],
   imports: [
     BrowserModule,

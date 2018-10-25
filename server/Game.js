@@ -17,6 +17,8 @@ class Game {
     this.exitCode = null
     this.stdout = ''
     this.statsInterval = null
+    this.totalMemory = TOT_MEM
+    this.statsHist = []
 
     this.proc = pty.spawn(command, args, {
       uid: config.uid,
@@ -46,11 +48,14 @@ class Game {
     let stats = Object.values(await pidusageTree(this.proc.pid))
     let percentCpu = stats.map(s => s.cpu).reduce((a, b) => a + b, 0) / NB_CPU
     let procMem = stats.map(s => s.memory).reduce((a, b) => a + b, 0)
-    SocketService.emitGameStats(this.proc.pid, {
+    let finalStats = {
       cpu: percentCpu,
-      memory: procMem,
-      totalMemory: TOT_MEM
-    })
+      memory: procMem
+    }
+    this.statsHist.push(finalStats)
+    if (this.statsInterval.length > 60)
+      this.statsHist.splice(0, 1)
+    SocketService.emitGameStats(this.proc.pid, finalStats)
   }
 
   onTermData (ws, msg) {
@@ -59,6 +64,10 @@ class Game {
 
   onEnterServer (ws, msg) {
     ws.send(JSON.stringify({event: 'term-data', data: this.stdout}))
+    for (let stats of this.statsHist) {
+      console.log(stats)
+      ws.send(JSON.stringify({event: 'game-stats', data: stats}))
+    }
   }
 
   processOnClose (code, signal) {

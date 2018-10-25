@@ -13,3 +13,9 @@ export class Game {
 export class GameList {
   [name: string]: Game;
 }
+
+export class Stat {
+  cpu: number;
+  memory: number;
+  totalMemory: number;
+}

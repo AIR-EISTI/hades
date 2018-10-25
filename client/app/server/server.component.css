@@ -16,3 +16,8 @@ h1 {
   position: relative;
   bottom: 5px;
 }
+
+
+.graph.memory {
+  margin-left: 20px;
+}
