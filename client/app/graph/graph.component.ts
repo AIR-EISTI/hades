@@ -1,8 +1,16 @@
-import { Component, OnInit, AfterContentInit, ElementRef, ViewChild, Input, HostListener } from '@angular/core';
+import { Component,
+         OnInit,
+         AfterContentInit,
+         ElementRef,
+         ViewChild,
+         Input,
+         HostListener
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import * as d3 from 'd3';
 
 import { WebSocketService } from '../services/websocket.service';
-import { Stat } from '../models/game';
+import { Stat } from '../models/server';
 
 @Component({
   selector: 'app-graph',
@@ -18,6 +26,10 @@ export class GraphComponent implements OnInit, AfterContentInit {
   @Input() private historyLength = 60;
   @Input() private prop = 'cpu';
   @Input() private color = '#2da0ce';
+  @Input() private title = 'CPU';
+  @Input() private displayFunction = (current, max) => {return (current*100/max).toFixed(2) + '%'};
+
+  private sub: Subscription;
 
   private yScale: d3.ScaleContinuousNumeric<number, number>;
   private xScale: d3.ScaleContinuousNumeric<number, number>;
@@ -62,10 +74,11 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.pathArea = svg.append('path')
       .attr('fill', this.color + '50');
 
-    this.webSocketService.getEventFeed('game-stats').subscribe(msg => {
+    this.sub = this.webSocketService.getEventFeed('game-stats').subscribe(msg => {
       this.addData(msg.data);
       this.updateData();
     });
+
   }
 
   updateData() {
@@ -77,8 +90,13 @@ export class GraphComponent implements OnInit, AfterContentInit {
       .attr('d', this.areaGen);
   }
 
+  ngOnDestroy() {
+    console.log('unsubscribed')
+    this.sub.unsubscribe();
+  }
+
   ngAfterContentInit() {
-    this.createXScale()
+    this.createXScale();
   }
 
   createXScale() {
@@ -95,7 +113,14 @@ export class GraphComponent implements OnInit, AfterContentInit {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-    this.createXScale()
-    this.updateData()
+    this.createXScale();
+    this.updateData();
+  }
+
+  public setData(data) {
+    setTimeout(() => {
+      this.data = data.reverse().slice(0, 60);
+      this.updateData();
+    }, 0);
   }
 }

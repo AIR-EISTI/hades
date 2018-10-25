@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import { GraphComponent } from '../graph/graph.component';
 import { ServerInfo } from '../models/server';
 import { ServerService } from '../services/server.service';
 import { WebSocketService } from '../services/websocket.service';
@@ -16,6 +17,7 @@ export class ServerComponent implements OnInit {
 
   private pid: Number;
   private server: ServerInfo;
+  @ViewChildren(GraphComponent) private graphs: QueryList<GraphComponent>;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -40,6 +42,10 @@ export class ServerComponent implements OnInit {
           this.server = message.data
       }
     )
+  }
+
+  ngAfterViewInit() {
+    this.graphs.changes.subscribe(r => r.map(child => child.setData(this.server.statsHist)))
   }
 
   stopServer () {

@@ -53,7 +53,7 @@ class Game {
       memory: procMem
     }
     this.statsHist.push(finalStats)
-    if (this.statsInterval.length > 60)
+    if (this.statsHist.length > 60)
       this.statsHist.splice(0, 1)
     SocketService.emitGameStats(this.proc.pid, finalStats)
   }
@@ -63,11 +63,8 @@ class Game {
   }
 
   onEnterServer (ws, msg) {
+    console.log('Game.onEnterServer')
     ws.send(JSON.stringify({event: 'term-data', data: this.stdout}))
-    for (let stats of this.statsHist) {
-      console.log(stats)
-      ws.send(JSON.stringify({event: 'game-stats', data: stats}))
-    }
   }
 
   processOnClose (code, signal) {

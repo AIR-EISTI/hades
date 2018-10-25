@@ -7,6 +7,7 @@ export class ServerInfo{
   stdout: Array<string>;
   exitCode: number;
   pid: number;
+  statsHist: Stat[];
 }
 
 export class ServerList {
@@ -17,4 +18,10 @@ export class ServerForm {
     nickname: string;
     game: string;
     vars: {[name: string]: string};
+}
+
+export class Stat {
+  cpu: number;
+  memory: number;
+  totalMemory: number;
 }

@@ -25,10 +25,11 @@ class SocketService extends EventEmitter {
   }
 
   onEnterServer (ws, pid) {
+    if (this.connToServers.has(ws)) {
+      this.emit('leave-server', ws)
+    }
     if (!(pid in this.serversToConn))
       this.serversToConn[pid] = new Set()
-    if (this.connToServers.has(ws))
-      this.emit('leave-server', ws)
     this.serversToConn[pid].add(ws)
     this.connToServers.set(ws, pid)
     this.emit(`enter-server@${pid}`, ws)
