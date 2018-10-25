@@ -35,16 +35,17 @@ export class GraphComponent implements OnInit, AfterContentInit {
   private areaGen: d3.Area<Stat>;
   private pathLine: d3.Selection<d3.BaseType, {}, null, undefined>;
   private pathArea: d3.Selection<d3.BaseType, {}, null, undefined>;
+  private svg: d3.Selection<d3.BaseType, {}, null, undefined>;
 
   constructor() { }
 
   ngOnInit() {
-    let svg = d3.select(this.graphEl.nativeElement)
+    this.svg = d3.select(this.graphEl.nativeElement)
       .attr('height', this.height);
 
     this.yScale = d3.scaleLinear()
       .domain([this.maxY, 0])
-      .rangeRound([0, this.height]);
+      .rangeRound([10, this.height-10]);
 
     this.lineGen = d3.line<Stat>()
       .y((d) => {
@@ -54,20 +55,24 @@ export class GraphComponent implements OnInit, AfterContentInit {
       }).curve(d3.curveMonotoneX);
 
     this.areaGen = d3.area<Stat>()
-      .y0(this.height)
+      .y0(this.height - 10)
       .y1((d) => {
         return this.yScale(d[this.prop]);
       }).x((_, i) => {
         return this.xScale(i);
       }).curve(d3.curveMonotoneX);
 
-    this.pathLine = svg.append('path')
+    this.pathLine = this.svg.append('path')
       .attr('stroke', this.color)
       .attr('stroke-width', 3)
       .attr('fill', 'none');
 
-    this.pathArea = svg.append('path')
+    this.pathArea = this.svg.append('path')
       .attr('fill', this.color + '50');
+
+    this.svg.append('g')
+      .call(d3.axisRight(this.yScale)
+      .ticks(3, "s"));
 
   }
 
