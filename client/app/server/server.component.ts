@@ -57,6 +57,10 @@ export class ServerComponent implements OnInit {
     this.graphs.changes.subscribe(() => setTimeout(this.updateGraphData.bind(this), 0));
   }
 
+  ngAfterContentInit() {
+    this.webSocketService.send('enter-server', this.pid);
+  }
+
   updateGraphData() {
     this.graphs.map(child => child.updateData(this.server.statsHist));
   }
@@ -67,8 +71,10 @@ export class ServerComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-    this.updateGraphScale();
-    this.updateGraphData();
+    setTimeout(() => {
+      this.updateGraphScale();
+      this.updateGraphData();
+    });
   }
 
   stopServer() {

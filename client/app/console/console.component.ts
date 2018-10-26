@@ -1,6 +1,7 @@
-import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges, HostListener } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Terminal } from 'xterm';
+import { fit } from 'xterm/lib/addons/fit/fit';
 
 import { WebSocketService } from '../services/websocket.service';
 import { SocketMessage } from '../models/websocket';
@@ -21,38 +22,56 @@ export class ConsoleComponent implements OnInit, OnChanges {
   private terminalElement: ElementRef;
   @Input()
   public pid: Number;
+  private width: Number = 0;
 
   constructor(private webSocketService: WebSocketService) {
     this.terminal = new Terminal({
       cursorBlink: true,
       scrollback: 60,
-      cols: 150,
       rows: 30
-    })
+    });
 
-    this.terminal.addDisposableListener('key', this.termKeyPressed.bind(this))
+    this.terminal.addDisposableListener('key', this.termKeyPressed.bind(this));
   }
 
   termKeyPressed(key) {
-    this.webSocketService.send('term-data', key)
+    this.webSocketService.send('term-data', key);
   }
 
   ngOnInit() {
-    this.consoleFeed = this.webSocketService.getEventFeed('term-data')
+    this.consoleFeed = this.webSocketService.getEventFeed('term-data');
     this.consoleFeed.subscribe((msg: SocketMessage) => {
-      this.terminal.write(msg.data)
+      this.terminal.write(msg.data);
     })
-    this.terminal.open(this.terminalElement.nativeElement)
+    this.terminal.open(this.terminalElement.nativeElement);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => this.updateTermSize());
   }
 
   ngOnDestroy() {
-    this.webSocketService.send('lever-server')
+    this.webSocketService.send('lever-server');
   }
 
-  ngOnChanges (changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes.firstChange)
-      return
-    this.terminal.reset()
-    this.webSocketService.send('enter-server', this.pid)
+      return;
+    this.terminal.reset();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+      this.updateTermSize();
+  }
+
+  updateTermSize() {
+    fit(this.terminal)
+    let windowWidth = parseInt(window.getComputedStyle(document.body).width);
+    let windowScrollWidth = document.body.scrollWidth;
+    let overflow = windowScrollWidth - windowWidth;
+    let termWidth = parseInt(window.getComputedStyle(this.terminalElement.nativeElement.parentElement).width);
+    this.width = termWidth - overflow;
+    setTimeout(() => fit(this.terminal));
   }
 }
