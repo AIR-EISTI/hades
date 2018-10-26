@@ -10,6 +10,7 @@ class SocketService extends EventEmitter {
     this.on('enter-server', this.onEnterServer)
     this.on('leave-server', this.onLeaveServer)
     this.on('term-data', this.onTermData)
+    this.on('term-resize', this.onTermResize)
   }
 
   register (ws) {
@@ -53,6 +54,13 @@ class SocketService extends EventEmitter {
     let pid = this.connToServers.get(ws)
     if (pid) {
       this.emit(`term-data@${pid}`, ws, msg)
+    }
+  }
+
+  onTermResize (ws, msg) {
+    let pid = this.connToServers.get(ws)
+    if (pid) {
+      this.emit(`term-resize@${pid}`, ws, msg)
     }
   }
 

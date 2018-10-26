@@ -38,6 +38,7 @@ class Game {
     this.proc.on('data', this.processOnData.bind(this))
     SocketService.on(`term-data@${this.proc.pid}`, this.onTermData.bind(this))
     SocketService.on(`enter-server@${this.proc.pid}`, this.onEnterServer.bind(this))
+    SocketService.on(`term-resize@${this.proc.pid}`, this.onTermResize.bind(this))
   }
 
   initStats () {
@@ -59,6 +60,11 @@ class Game {
 
   onTermData (ws, msg) {
     this.proc.write(msg)
+  }
+
+  onTermResize (ws, size) {
+    console.log(size)
+    this.proc.resize(size.cols, size.rows)
   }
 
   onEnterServer (ws, msg) {

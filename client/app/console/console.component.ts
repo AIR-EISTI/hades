@@ -62,7 +62,7 @@ export class ConsoleComponent implements OnInit, OnChanges {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-      this.updateTermSize();
+    this.updateTermSize();
   }
 
   updateTermSize() {
@@ -71,7 +71,16 @@ export class ConsoleComponent implements OnInit, OnChanges {
     let windowScrollWidth = document.body.scrollWidth;
     let overflow = windowScrollWidth - windowWidth;
     let termWidth = parseInt(window.getComputedStyle(this.terminalElement.nativeElement.parentElement).width);
-    this.width = termWidth - overflow;
-    setTimeout(() => fit(this.terminal));
+    let newSize = termWidth - overflow;
+    if (newSize !== this.width) {
+      this.width = termWidth - overflow;
+      setTimeout(() => {
+        fit(this.terminal);
+        this.webSocketService.send('term-resize', {
+          cols: this.terminal.cols,
+          rows: this.terminal.rows
+        });
+      });
+    }
   }
 }
