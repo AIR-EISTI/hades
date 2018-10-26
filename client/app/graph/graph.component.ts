@@ -113,22 +113,27 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.width = this.graphEl.nativeElement.getBoundingClientRect().width
     this.xScale = d3.scaleLinear()
       .domain([this.historyLength, 0])
-      .rangeRound([0, this.width]);
+      .rangeRound([25, this.width]);
   }
 
-  onMouseMove(event) {
-    let x = event.layerX;
-    this.cursorInfo.attr('x1', x).attr('x2', x);
-    let index = this.xScale.invert(x);
+  updateCursorInfo(xPos) {
+    this.cursorInfo.attr('x1', xPos).attr('x2', xPos);
+    let index = this.xScale.invert(xPos);
     if (index >= this.data.length - 1) {
+      this.cursorPoint.style('opacity', 0);
       return;
     }
     let previousData = this.data[Math.ceil(index)][this.prop];
     let nextData = this.data[Math.floor(index)][this.prop];
     let currentData = nextData + (previousData - nextData) * (index % 1);
     this.cursorPoint
-      .attr('cx', x)
-      .attr('cy', this.yScale(currentData));
+      .attr('cx', xPos)
+      .attr('cy', this.yScale(currentData))
+      .style('opacity', 1);
+  }
+
+  onMouseMove(event) {
+    this.updateCursorInfo(event.layerX);
   }
 
   onMouseLeave() {
@@ -136,8 +141,8 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.cursorPoint.style('opacity', 0);
   }
 
-  onMouseEnter() {
+  onMouseEnter(event) {
+    this.updateCursorInfo(event.layerX);
     this.cursorInfo.style('opacity', 1);
-    this.cursorPoint.style('opacity', 1);
   }
 }
