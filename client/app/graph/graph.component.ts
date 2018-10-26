@@ -119,7 +119,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
   updateCursorInfo(xPos) {
     this.cursorInfo.attr('x1', xPos).attr('x2', xPos);
     let index = this.xScale.invert(xPos);
-    if (index >= this.data.length - 1) {
+    if (index > this.data.length - 1) {
       this.cursorPoint.style('opacity', 0);
       return;
     }

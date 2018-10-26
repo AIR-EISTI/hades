@@ -89,6 +89,7 @@ export class ServerComponent implements OnInit {
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe())
+    this.webSocketService.send('lever-server');
   }
 
   undefineServer() {

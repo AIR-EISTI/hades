@@ -19,6 +19,7 @@ class Game {
     this.statsInterval = null
     this.totalMemory = TOT_MEM
     this.statsHist = []
+    this.mapSizes = new Map()
 
     this.proc = pty.spawn(command, args, {
       uid: config.uid,
@@ -39,6 +40,7 @@ class Game {
     SocketService.on(`term-data@${this.proc.pid}`, this.onTermData.bind(this))
     SocketService.on(`enter-server@${this.proc.pid}`, this.onEnterServer.bind(this))
     SocketService.on(`term-resize@${this.proc.pid}`, this.onTermResize.bind(this))
+    SocketService.on(`leave-server@${this.proc.pid}`, this.onLeaveServer.bind(this))
   }
 
   initStats () {
@@ -62,14 +64,18 @@ class Game {
     this.proc.write(msg)
   }
 
-  onTermResize (ws, size) {
-    console.log(size)
-    this.proc.resize(size.cols, size.rows)
+  onTermResize (ws, newSize) {
+    this.mapSizes.set(ws, newSize)
+    this.updateTermSize()
   }
 
   onEnterServer (ws, msg) {
-    console.log('Game.onEnterServer')
     ws.send(JSON.stringify({event: 'term-data', data: this.stdout}))
+  }
+
+  onLeaveServer (ws) {
+    this.mapSizes.delete(ws)
+    this.updateTermSize()
   }
 
   processOnClose (code, signal) {
@@ -91,6 +97,19 @@ class Game {
     //SocketService.emitUpdateStatus(this.proc.pid, this)
   }
 
+  updateTermSize() {
+    let genSize = this.mapSizes.values()
+    let min = genSize.next().value
+    if (!min)
+      return
+    for (let {rows, cols} of genSize) {
+      min.rows = Math.min(min.rows, rows)
+      min.cols = Math.min(min.cols, cols)
+    }
+    this.proc.resize(min.cols, min.rows)
+    SocketService.emitTermResize(this.proc.pid, min)
+  }
+
   kill () {
     this.proc.kill('SIGTERM')
   }
@@ -100,6 +119,7 @@ class Game {
     delete returnObject['proc']
     delete returnObject['stdout']
     delete returnObject['statsInterval']
+    delete returnObject['mapSizes']
     return returnObject
   }
 }

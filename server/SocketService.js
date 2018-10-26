@@ -44,6 +44,7 @@ class SocketService extends EventEmitter {
     this.serversToConn[pid].delete(ws)
     if (!this.serversToConn[pid].size)
       delete this.serversToConn[pid]
+    this.emit(`leave-server@${pid}`, ws)
   }
 
   onClose (ws) {
@@ -87,6 +88,10 @@ class SocketService extends EventEmitter {
   emitGameDeleted (name) {
     console.log(name)
     this.broadcast('game-deleted', name)
+  }
+
+  emitTermResize (pid, size) {
+    this.to(pid, 'term-resize', size)
   }
 
   to (pid, event, data) {

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges, HostListener } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
 
@@ -15,7 +15,8 @@ import { SocketMessage } from '../models/websocket';
 })
 export class ConsoleComponent implements OnInit, OnChanges {
 
-  private consoleFeed: Observable<SocketMessage>;
+  private consoleFeedSub: Subscription;
+  private resizeSub: Subscription;
   private terminal: Terminal;
 
   @ViewChild('terminal')
@@ -39,10 +40,17 @@ export class ConsoleComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.consoleFeed = this.webSocketService.getEventFeed('term-data');
-    this.consoleFeed.subscribe((msg: SocketMessage) => {
-      this.terminal.write(msg.data);
-    })
+    this.consoleFeedSub = this.webSocketService
+      .getEventFeed('term-data')
+      .subscribe((msg: SocketMessage) => {
+        this.terminal.write(msg.data);
+      });
+
+    this.resizeSub = this.webSocketService
+      .getEventFeed('term-resize')
+      .subscribe((msg: SocketMessage) => {
+        this.resizeTerminal(msg.data);
+      });
     this.terminal.open(this.terminalElement.nativeElement);
   }
 
@@ -51,7 +59,8 @@ export class ConsoleComponent implements OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    this.webSocketService.send('lever-server');
+    this.resizeSub.unsubscribe();
+    this.consoleFeedSub.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -82,5 +91,10 @@ export class ConsoleComponent implements OnInit, OnChanges {
         });
       });
     }
+  }
+
+  resizeTerminal(size) {
+    console.log('resized', size)
+    this.terminal.resize(size.cols, size.rows);
   }
 }
