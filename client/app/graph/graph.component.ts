@@ -28,6 +28,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
   @Input() private data: Stat[] = [];
 
   private title: string = '';
+  private mouseIn: boolean = false;
 
   private yScale: d3.ScaleContinuousNumeric<number, number>;
   private xScale: d3.ScaleContinuousNumeric<number, number>;
@@ -96,6 +97,15 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.createXScale();
   }
 
+  updateTitle(current = null) {
+    if (this.data.length === 0) {
+      this.title = this.label;
+    } else {
+      current = current === null ? this.data[0][this.prop] : current;
+      this.title = `${this.label}: ${this.displayFunction(current, this.maxY)}`;
+    }
+  }
+
   updateData(data) {
     this.data = data;
     this.pathLine
@@ -104,9 +114,8 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.pathArea
       .data([this.data])
       .attr('d', this.areaGen);
-    this.title = this.label;
-    if (this.data.length)
-      this.title += ': ' + this.displayFunction(this.data[0][this.prop], this.maxY);
+    if (!this.mouseIn)
+      this.updateTitle()
   }
 
   createXScale() {
@@ -130,6 +139,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
       .attr('cx', xPos)
       .attr('cy', this.yScale(currentData))
       .style('opacity', 1);
+    this.updateTitle(currentData);
   }
 
   onMouseMove(event) {
@@ -139,10 +149,13 @@ export class GraphComponent implements OnInit, AfterContentInit {
   onMouseLeave() {
     this.cursorInfo.style('opacity', 0);
     this.cursorPoint.style('opacity', 0);
+    this.updateTitle();
+    this.mouseIn = false;
   }
 
   onMouseEnter(event) {
     this.updateCursorInfo(event.layerX);
     this.cursorInfo.style('opacity', 1);
+    this.mouseIn = true;
   }
 }
