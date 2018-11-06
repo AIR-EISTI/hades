@@ -65,6 +65,8 @@ class Game {
   }
 
   onTermResize (ws, newSize) {
+    if (this.status !== 'RUNNING')
+      return
     this.mapSizes.set(ws, newSize)
     this.updateTermSize()
   }
@@ -83,6 +85,7 @@ class Game {
     this.status = 'CLOSED'
     console.log('[' + this.proc.pid + '-' + this.name + '] Process endend with code '+ this.exitCode)
     SocketService.emitStatus(this.getRepr())
+    clearInterval(this.statsInterval)
   }
 
   processOnData (data) {
@@ -93,7 +96,6 @@ class Game {
   processOnError (err) {
     console.error('[' + this.proc.pid + '-' + this.name + '] [ERROR] ' + err)
     this.status = 'ERROR'
-    clearInterval(this.statsInterval)
     //SocketService.emitUpdateStatus(this.proc.pid, this)
   }
 
