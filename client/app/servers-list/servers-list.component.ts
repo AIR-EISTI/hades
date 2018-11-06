@@ -19,15 +19,15 @@ export class ServersListComponent implements OnInit {
     this.serverService.getServersList().subscribe(
       servers => this.servers = servers,
       error => console.log(error)
-    )
+    );
 
     this.webSocketService.getEventFeed('server-status').subscribe(
       msg => this.servers[msg.data.pid] = msg.data
-    )
+    );
 
     this.webSocketService.getEventFeed('server-deleted').subscribe(
       msg => delete this.servers[msg.data]
-    )
+    );
   }
 
 }

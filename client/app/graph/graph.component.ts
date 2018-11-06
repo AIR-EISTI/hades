@@ -24,11 +24,10 @@ export class GraphComponent implements OnInit, AfterContentInit {
   @Input() private prop;
   @Input() private color = '#2da0ce';
   @Input() private label;
-  @Input() private displayFunction = (current, max) => {return (current*100/max).toFixed(2) + '%'};
   @Input() private data: Stat[] = [];
 
-  private title: string = '';
-  private mouseIn: boolean = false;
+  private title = '';
+  private mouseIn = false;
 
   private yScale: d3.ScaleContinuousNumeric<number, number>;
   private xScale: d3.ScaleContinuousNumeric<number, number>;
@@ -42,6 +41,8 @@ export class GraphComponent implements OnInit, AfterContentInit {
   private cursorInfo: d3.Selection<d3.BaseType, {}, null, undefined>;
   private cursorPoint: d3.Selection<d3.BaseType, {}, null, undefined>;
 
+  @Input() private displayFunction = (current, max) => (current * 100 / max).toFixed(2) + '%';
+
 
   constructor() { }
 
@@ -51,7 +52,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
 
     this.yScale = d3.scaleLinear()
       .domain([this.maxY, 0])
-      .rangeRound([10, this.height-10]);
+      .rangeRound([10, this.height - 10]);
 
     this.lineGen = d3.line<Stat>()
       .y((d) => {
@@ -78,7 +79,7 @@ export class GraphComponent implements OnInit, AfterContentInit {
 
     this.svg
       .call(d3.axisRight(this.yScale)
-      .ticks(3, "s"));
+      .ticks(3, 's'));
 
     this.cursorInfo = this.svg.append('line')
       .attr('y1', 0)
@@ -114,12 +115,13 @@ export class GraphComponent implements OnInit, AfterContentInit {
     this.pathArea
       .data([this.data])
       .attr('d', this.areaGen);
-    if (!this.mouseIn)
-      this.updateTitle()
+    if (!this.mouseIn) {
+      this.updateTitle();
+    }
   }
 
   createXScale() {
-    this.width = this.graphEl.nativeElement.getBoundingClientRect().width
+    this.width = this.graphEl.nativeElement.getBoundingClientRect().width;
     this.xScale = d3.scaleLinear()
       .domain([this.historyLength, 0])
       .rangeRound([25, this.width]);
@@ -127,14 +129,14 @@ export class GraphComponent implements OnInit, AfterContentInit {
 
   updateCursorInfo(xPos) {
     this.cursorInfo.attr('x1', xPos).attr('x2', xPos);
-    let index = this.xScale.invert(xPos);
+    const index = this.xScale.invert(xPos);
     if (index > this.data.length - 1) {
       this.cursorPoint.style('opacity', 0);
       return;
     }
-    let previousData = this.data[Math.ceil(index)][this.prop];
-    let nextData = this.data[Math.floor(index)][this.prop];
-    let currentData = nextData + (previousData - nextData) * (index % 1);
+    const previousData = this.data[Math.ceil(index)][this.prop];
+    const nextData = this.data[Math.floor(index)][this.prop];
+    const currentData = nextData + (previousData - nextData) * (index % 1);
     this.cursorPoint
       .attr('cx', xPos)
       .attr('cy', this.yScale(currentData))

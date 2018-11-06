@@ -10,7 +10,7 @@ const routes: Routes = [
   {path: 'games/:name', component: GameDetailComponent},
   {path: 'servers/:pid', component: ServerComponent},
   {path: 'graph', component: GraphComponent}
-]
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

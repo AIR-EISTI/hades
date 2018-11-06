@@ -14,8 +14,8 @@ import { ServerService } from '../services/server.service';
 })
 export class GameDetailComponent implements OnInit {
 
-  game : Game;
-  gameName : string;
+  game: Game;
+  gameName: string;
   value: string;
   private form: ServerForm = new ServerForm();
 
@@ -25,26 +25,26 @@ export class GameDetailComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap
       .pipe(switchMap((params: ParamMap) => {
-        this.gameName = params.get('name')
-        return this.gameService.getGame(this.gameName)
+        this.gameName = params.get('name');
+        return this.gameService.getGame(this.gameName);
       })).subscribe(
         game => {
-          this.game = game
-          this.form.vars = {}
-          this.form.nickname = `Serveur ${this.game.name}`
-          this.form.game = this.game.name
-          for (let variable of this.game.vars) {
-            this.form.vars[variable.name] = variable.default
+          this.game = game;
+          this.form.vars = {};
+          this.form.nickname = `Serveur ${this.game.name}`;
+          this.form.game = this.game.name;
+          for (const variable of this.game.vars) {
+            this.form.vars[variable.name] = variable.default;
           }
         },
         error => console.log(error)
-      )
+      );
   }
 
   createGame() {
     this.serverService.createServer(this.form).subscribe(
       result => this.router.navigate(['/servers', result.pid])
-    )
+    );
   }
 
 }

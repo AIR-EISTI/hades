@@ -11,18 +11,18 @@ import { WebSocketService } from '../services/websocket.service';
 })
 export class GamesComponent implements OnInit {
 
-  games : GameList;
+  games: GameList;
 
   constructor(public gameService: GameService, public webSocketService: WebSocketService) { }
 
   ngOnInit() {
-    this.getGames()
+    this.getGames();
     this.webSocketService.getEventFeed('game-loaded').subscribe(
       msg => this.games[msg.data.name] = msg.data
-    )
+    );
     this.webSocketService.getEventFeed('game-deleted').subscribe(
       msg => delete this.games[msg.data]
-    )
+    );
   }
 
 
@@ -30,7 +30,7 @@ export class GamesComponent implements OnInit {
     this.gameService.getGames().subscribe(
       games => this.games = games,
       error => console.log(error)
-    )
+    );
   }
 
 }

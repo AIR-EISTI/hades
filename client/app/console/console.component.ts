@@ -1,4 +1,13 @@
-import { Component, OnInit, OnChanges, ViewChild, ElementRef, Input, SimpleChanges, HostListener } from '@angular/core';
+import { Component,
+         OnInit,
+         OnChanges,
+         OnDestroy,
+         AfterViewInit,
+         ViewChild,
+         ElementRef,
+         Input,
+         SimpleChanges,
+         HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
@@ -13,7 +22,7 @@ import { SocketMessage } from '../models/websocket';
     './console.component.css'
   ]
 })
-export class ConsoleComponent implements OnInit, OnChanges {
+export class ConsoleComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
 
   private consoleFeedSub: Subscription;
   private resizeSub: Subscription;
@@ -64,8 +73,9 @@ export class ConsoleComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.firstChange)
+    if (changes.firstChange) {
       return;
+    }
     this.terminal.reset();
   }
 
@@ -75,12 +85,12 @@ export class ConsoleComponent implements OnInit, OnChanges {
   }
 
   updateTermSize() {
-    fit(this.terminal)
-    let windowWidth = parseInt(window.getComputedStyle(document.body).width);
-    let windowScrollWidth = document.body.scrollWidth;
-    let overflow = windowScrollWidth - windowWidth;
-    let termWidth = parseInt(window.getComputedStyle(this.terminalElement.nativeElement.parentElement).width);
-    let newSize = termWidth - overflow;
+    fit(this.terminal);
+    const windowWidth = parseInt(window.getComputedStyle(document.body).width, 10);
+    const windowScrollWidth = document.body.scrollWidth;
+    const overflow = windowScrollWidth - windowWidth;
+    const termWidth = parseInt(window.getComputedStyle(this.terminalElement.nativeElement.parentElement).width, 10);
+    const newSize = termWidth - overflow;
     if (newSize !== this.width) {
       this.width = termWidth - overflow;
       setTimeout(() => {
@@ -94,7 +104,7 @@ export class ConsoleComponent implements OnInit, OnChanges {
   }
 
   resizeTerminal(size) {
-    console.log('resized', size)
+    console.log('resized', size);
     this.terminal.resize(size.cols, size.rows);
   }
 }

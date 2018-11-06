@@ -1,4 +1,4 @@
-export class ServerInfo{
+export class ServerInfo {
   name: string;
   nickname: string;
   status: string;

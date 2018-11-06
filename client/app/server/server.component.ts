@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, AfterContentInit, ViewChildren, QueryList, HostListener } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { WebSocketService } from '../services/websocket.service';
   templateUrl: './server.component.html',
   styleUrls: ['./server.component.css']
 })
-export class ServerComponent implements OnInit {
+export class ServerComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentInit {
 
   private pid: Number;
   private server: ServerInfo;
@@ -27,7 +27,7 @@ export class ServerComponent implements OnInit {
               private webSocketService: WebSocketService) { }
 
   ngOnInit() {
-    let serverObs: Observable<ServerInfo> = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
+    const serverObs: Observable<ServerInfo> = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
       this.pid = Number(params.get('pid'));
       console.log('Server changed', this.pid);
       return this.serverService.getServerInfo(this.pid);
@@ -42,8 +42,9 @@ export class ServerComponent implements OnInit {
     ));
 
     this.subs.push(this.webSocketService.getEventFeed('server-status').subscribe(message => {
-      if (this.pid === message.data.pid)
+      if (this.pid === message.data.pid) {
         this.server = message.data;
+      }
     }));
 
     this.subs.push(this.webSocketService.getEventFeed('game-stats').subscribe(msg => {
@@ -88,7 +89,7 @@ export class ServerComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe())
+    this.subs.forEach(sub => sub.unsubscribe());
     this.webSocketService.send('lever-server');
   }
 
@@ -96,10 +97,11 @@ export class ServerComponent implements OnInit {
     this.serverService.undefineServer(this.pid).subscribe(
       () => {},
       error => {
-        if (error.status === 201)
+        if (error.status === 201) {
           this.router.navigate(['/']);
-        else
+        } else {
           console.log(error);
+        }
       }
     );
   }
