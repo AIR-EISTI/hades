@@ -2,6 +2,7 @@
 const fs = require('fs')
 const util = require('util')
 const path = require('path')
+const Ajv = require('ajv')
 
 const SocketService = require('./SocketService')
 
@@ -10,6 +11,7 @@ const readFile = util.promisify(fs.readFile)
 const access = util.promisify(fs.access)
 
 const config = require('../config')
+const gameConfigSchema = require('./schemas/game.schema')
 
 class ConfigManager {
   constructor () {
@@ -17,8 +19,8 @@ class ConfigManager {
     this.matchFileRegex = /\.json$/
     this.games = {}
     this.fileNames = {}
-    this.readConfigDir()
-    fs.watch(this.configDir, this.configChanged.bind(this))
+    this.ajv = new Ajv({ removeAdditional: true, allErrors: true, verbose: true })
+    this.validateGameConfig = this.ajv.compile(gameConfigSchema)
   }
 
   readConfigDir () {
@@ -37,10 +39,19 @@ class ConfigManager {
       })
   }
 
+  startWatchDir () {
+    fs.watch(this.configDir, this.configChanged.bind(this))
+  }
+
   async loadConfig (configFileName) {
     try {
       let data = await readFile(path.join(this.configDir, configFileName))
       let config = JSON.parse(data)
+
+      if (!this.validateGameConfig(config)) {
+        throw this.ajv.errorsText(this.validateGameConfig.errors)
+      }
+
       this.games[config.name] = config
       this.fileNames[configFileName] = config.name
       SocketService.emitGameLoaded(config)
