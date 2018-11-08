@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hades config",
+  "description": "Hades configuration file",
+  "type": "object",
+  "properties": {
+    "hadesServerPort": {
+      "type": "number",
+      "description": "The port Hades API will listen on.",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "hadesServerHost": {
+      "type": "string",
+      "description": "The host Hades API will listen on.",
+    },
+    "configDir": {
+      "type": "string",
+      "description": "The directory in which will be stored the game configuration files."
+    }
+  }
+}
