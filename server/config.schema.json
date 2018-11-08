@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Game config",
+  "description": "The configuration file defining the command line, arguments and variables to launch a given game.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the game as it will appear in the game list (must be unique)"
+    },
+    "uid": {
+      "type": "number",
+      "description": "The user id of the user that will run the process",
+      "minimum": 1
+    },
+    "gid": {
+      "type": "number",
+      "description": "The group id of the user that will run the process",
+      "minimum": 1
+    },
+    "cwd": {
+      "type": "string",
+      "description": "Location of the directory in which the process will be launched"
+    },
+    "vars": {
+      "type": "array",
+      "description": "User definied values to be used in command line arguments",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the variable used in the command line arguments prefixed by \"$var_\""
+          },
+          "label": {
+            "type": "string",
+            "description": "The name of the variable as it is displayed to the user"
+          },
+          "default": {
+            "type": "string",
+            "description": "The default value for the variable"
+          }
+        },
+        "required": ["name", "label", "default"]
+      }
+    },
+    "command": {
+      "type": "array",
+      "description": "The command to launch, first item is the command it self then follow its arguments",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["name", "uid", "gid", "cwd", "vars", "command"]
+}
