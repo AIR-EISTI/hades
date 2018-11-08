@@ -12,7 +12,7 @@
     },
     "hadesServerHost": {
       "type": "string",
-      "description": "The host Hades API will listen on.",
+      "description": "The host Hades API will listen on."
     },
     "configDir": {
       "type": "string",
