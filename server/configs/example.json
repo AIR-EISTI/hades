@@ -1,0 +1,29 @@
+{
+    "name": "Trackmania",
+    "uid": 1000,
+    "gid": 1000,
+    "cwd": ".",
+    "vars": [
+        {
+            "name": "file",
+            "label": "Script sh",
+            "default": "test.sh"
+        },
+        {
+            "name": "arg1",
+            "label": "Premier argument",
+            "default": "plouf"
+        },
+        {
+            "name": "arg2",
+            "label": "Deuxième argument",
+            "default": "plif"
+        }
+    ],
+    "command": [
+        "sh",
+        "$var_file",
+        "$var_arg1",
+        "$var_arg2"
+    ]
+}
